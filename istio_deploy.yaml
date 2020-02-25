@@ -1,0 +1,63 @@
+# Update <REGISTRY> <NAMESPACE> values before use
+apiVersion: v1
+kind: Service
+metadata:
+  name: meetup-node
+  labels:
+    app: meetup-node
+spec:
+  ports:
+  - port: 3000
+    name: http
+  selector:
+    app: meetup-node
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meetup-node-v1
+  labels:
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: meetup-node
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: meetup-node
+        version: v1
+    spec:
+      containers:
+      - name: meetup-node
+        image: docker.io/mvelasc/demo:v1
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meetup-node-v2
+  labels:
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: meetup-node
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: meetup-node
+        version: v2
+    spec:
+      containers:
+      - name: meetup-node
+        image: docker.io/mvelasc/demo:v2
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: Always
